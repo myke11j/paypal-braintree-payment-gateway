@@ -19,15 +19,64 @@ class Home extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleCurrencyChange = this.handleCurrencyChange.bind(this)
   }
 
   handleChange(event) {
-    this.setState({ value: event.target.value });
+    this.setState({ [event.target.name]: event.target.value });
+  }
+
+  handleCurrencyChange(eventKey, event) {
+    this.setState({ [event.target.name]: eventKey });
+  }
+
+  validate (evt) {
+    const { state } = evt
+    if (!state.name) {
+      return this.setState({ 
+        showError: true,
+        errorMessage: 'Order name is required'
+      })
+    }
+    if (!state.price) {
+      return this.setState({ 
+        showError: true,
+        errorMessage: 'Order price is required'
+      })
+    }
+    if (!state.creditCardCVV) {
+      return this.setState({ 
+        showError: true,
+        errorMessage: 'Credit card CVV is required'
+      })
+    }
+    if (!state.creditCardExp) {
+      return this.setState({ 
+        showError: true,
+        errorMessage: 'Credit card Expery date is required'
+      })
+    }
+    if (!state.creditCardName) {
+      return this.setState({ 
+        showError: true,
+        errorMessage: 'Credit card holder name is required'
+      })
+    }
+    if (!state.creditCardNum) {
+      return this.setState({ 
+        showError: true,
+        errorMessage: 'Credit card number is required'
+      })
+    }
+    return true
   }
 
   handleSubmit(event) {
-    event.preventDefault();    
-    fetch(`http://localhost:8000/fetch-html?pageURL=${this.state.value}`)
+    event.preventDefault();
+    let queryString = ``;
+    const validateFlag = this.validate({ state: this.state })
+    if (!typeof validateFlag === 'boolean') {
+      fetch(`http://localhost:8000/pay?${queryString}`)
         .then((data) => {
           
         })
@@ -37,13 +86,14 @@ class Home extends Component {
             showError: true,
             errorMessage: err.message
           })
-        })
+        }) 
+    }
   }
 
   render() {
     return (
       <form className='web-analyzer'>
-        <FormGroup controlId="formBasicText">
+        <FormGroup controlId='payment-form'>
         <Tabs defaultActiveKey={1} animation={false} id="noanim-tab-example">
           <Tab eventKey={1} title="Order Details">
             <FormControl
@@ -52,20 +102,23 @@ class Home extends Component {
               placeholder='Price'
               onChange={this.handleChange}
               require={'true'}
+              name='price'
             />
             <br/>
             <SplitButton
               // bsStyle={title}
               title='Currency'
               key='currecny'
-              id={`split-button-basic`}
+              require={'true'}
+              name='currency'
+              id='currency'
             >
-              <MenuItem eventKey="1">{'USD'}</MenuItem>
-              <MenuItem eventKey="2">{'EUR'}</MenuItem>
-              <MenuItem eventKey="3">{'THB'}</MenuItem>
-              <MenuItem eventKey="4">{'HKD'}</MenuItem>
-              <MenuItem eventKey="3">{'SGD'}</MenuItem>
-              <MenuItem eventKey="4">{'AUD'}</MenuItem>
+              <MenuItem active={'true'} onSelect={this.handleCurrencyChange} name='currency' eventKey={'USD'}>{'USD'}</MenuItem>
+              <MenuItem onSelect={this.handleCurrencyChange} name='currency' eventKey={'EUR'}>{'EUR'}</MenuItem>
+              <MenuItem onSelect={this.handleCurrencyChange} name='currency' eventKey={'THB'}>{'THB'}</MenuItem>
+              <MenuItem onSelect={this.handleCurrencyChange} name='currency' eventKey={'HKD'}>{'HKD'}</MenuItem>
+              <MenuItem onSelect={this.handleCurrencyChange} name='currency' eventKey={'SGD'}>{'SGD'}</MenuItem>
+              <MenuItem onSelect={this.handleCurrencyChange} name='currency' eventKey={'AUD'}>{'AUD'}</MenuItem>
             </SplitButton>
             <br/>          
             <FormControl
@@ -74,6 +127,7 @@ class Home extends Component {
               placeholder='Your Name'
               onChange={this.handleChange}
               require={'true'}
+              name='name'
             />
             <br/> 
             </Tab>
@@ -84,6 +138,7 @@ class Home extends Component {
                 placeholder='Credit card holder name'
                 onChange={this.handleChange}
                 require={'true'}
+                name='creditCardName'
               />
               <br/>
               <FormControl
@@ -92,6 +147,7 @@ class Home extends Component {
                 placeholder='Credit card number'
                 onChange={this.handleChange}
                 require={'true'}
+                name='creditCardNum'
               />
               <br/>
               <FormControl
@@ -100,6 +156,7 @@ class Home extends Component {
                 placeholder='Credit card expiration'
                 onChange={this.handleChange}
                 require={'true'}
+                name='creditCardExp'
               />
               <br/>
               <FormControl
@@ -108,6 +165,7 @@ class Home extends Component {
                 placeholder='Credit card CVV'
                 onChange={this.handleChange}
                 require={'true'}
+                name='creditCardCVV'
               />
               <br/>
             </Tab>

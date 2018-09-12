@@ -1,8 +1,8 @@
 'use strict'
 
 const {
-  fetchHTML
-} = require('../controllers/paymentl.controller');
+  processPayment
+} = require('../controllers/payment.controller');
 const { queryChecks } = require('../middlewares');
 
 module.exports = (app) => {

@@ -24,5 +24,5 @@ const processPayment = (req, res) => {
 };
 
 module.exports = {
-    fetchHTML
+    processPayment
 };
