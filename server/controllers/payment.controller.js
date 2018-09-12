@@ -2,7 +2,6 @@
 
 'use strict'
 
-const cheerio = require('cheerio');
 const fetchService = require('../services/fetch.service');
 
 const {
@@ -13,7 +12,9 @@ const {
 
 const processPayment = (req, res) => {
     try {
-
+        return sendSuccess({
+            res, message: 'Successfully processed', data: []
+        })
     } catch (err) {
         console.log(err);
         return sendFailure({

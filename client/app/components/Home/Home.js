@@ -12,9 +12,9 @@ class Home extends Component {
       creditCardNum: null,
       creditCardExp: null,
       creditCardCVV: null,
-      price: null,
+      orderPrice: null,
       currency: null,
-      name: null
+      orderName: null
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -32,16 +32,22 @@ class Home extends Component {
 
   validate (evt) {
     const { state } = evt
-    if (!state.name) {
+    if (!state.orderName) {
       return this.setState({ 
         showError: true,
         errorMessage: 'Order name is required'
       })
     }
-    if (!state.price) {
+    if (!state.orderPrice) {
       return this.setState({ 
         showError: true,
         errorMessage: 'Order price is required'
+      })
+    }
+    if (!state.currency) {
+      return this.setState({ 
+        showError: true,
+        errorMessage: 'Please select one currency from Dropdown'
       })
     }
     if (!state.creditCardCVV) {
@@ -75,10 +81,17 @@ class Home extends Component {
     event.preventDefault();
     let queryString = ``;
     const validateFlag = this.validate({ state: this.state })
-    if (!typeof validateFlag === 'boolean') {
+    queryString += `price=${this.state.orderPrice}&`
+    queryString += `name=${this.state.orderName}&`
+    queryString += `currency=${this.state.currency}&`
+    queryString += `creditCardCVV=${this.state.creditCardCVV}&`
+    queryString += `creditCardExp=${this.state.creditCardExp}&`
+    queryString += `creditCardName=${this.state.creditCardName}&`
+    queryString += `creditCardNum=${this.state.creditCardNum}&`
+    if (typeof validateFlag === 'boolean') {
       fetch(`http://localhost:8000/pay?${queryString}`)
         .then((data) => {
-          
+          return alert('Your Payment has been processed!')
         })
         .catch((err) => {
           console.error(err)
@@ -98,22 +111,22 @@ class Home extends Component {
           <Tab eventKey={1} title="Order Details">
             <FormControl
               type="number"
-              value={this.state.price}
+              value={this.state.orderPrice}
               placeholder='Price'
               onChange={this.handleChange}
               require={'true'}
-              name='price'
+              name='orderPrice'
             />
             <br/>
             <SplitButton
               // bsStyle={title}
-              title='Currency'
+              title={this.state.currency ? this.state.currency : 'Currency'}
               key='currecny'
               require={'true'}
               name='currency'
               id='currency'
             >
-              <MenuItem active={'true'} onSelect={this.handleCurrencyChange} name='currency' eventKey={'USD'}>{'USD'}</MenuItem>
+              <MenuItem onSelect={this.handleCurrencyChange} name='currency' eventKey={'USD'}>{'USD'}</MenuItem>
               <MenuItem onSelect={this.handleCurrencyChange} name='currency' eventKey={'EUR'}>{'EUR'}</MenuItem>
               <MenuItem onSelect={this.handleCurrencyChange} name='currency' eventKey={'THB'}>{'THB'}</MenuItem>
               <MenuItem onSelect={this.handleCurrencyChange} name='currency' eventKey={'HKD'}>{'HKD'}</MenuItem>
@@ -123,11 +136,11 @@ class Home extends Component {
             <br/>          
             <FormControl
               type="text"
-              value={this.state.name}
+              value={this.state.orderName}
               placeholder='Your Name'
               onChange={this.handleChange}
               require={'true'}
-              name='name'
+              name='orderName'
             />
             <br/> 
             </Tab>
