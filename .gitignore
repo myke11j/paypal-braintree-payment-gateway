@@ -22,3 +22,5 @@ $RECYCLE.BIN/
 .Spotlight-V100
 .Trashes
 package-lock.json
+
+creds.txt

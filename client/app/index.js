@@ -10,6 +10,8 @@ import {
 
 import App from './components/App/App';
 import NotFound from './components/App/NotFound';
+import Success from './components/App/Success';
+import Failure from './components/App/Failure';
 
 import Home from './components/Home/Home';
 
@@ -20,6 +22,8 @@ render((
     <App>
       <Switch>
         <Route exact path="/" component={Home}/>
+        <Route exact path="/success" component={Success}/>
+        <Route exact path="/failure" component={Failure}/>
         <Route component={NotFound}/>
       </Switch>
     </App>

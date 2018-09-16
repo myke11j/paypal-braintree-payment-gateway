@@ -89,17 +89,10 @@ class Home extends Component {
     queryString += `creditCardName=${this.state.creditCardName}&`
     queryString += `creditCardNum=${this.state.creditCardNum}&`
     if (typeof validateFlag === 'boolean') {
-      fetch(`http://localhost:8000/pay?${queryString}`)
-        .then((data) => {
-          return alert('Your Payment has been processed!')
+      fetch(`http://localhost:8000/pay?${queryString}`, { mode: 'no-cors' })
+        .then((res) => {
+          window.location(res.url)
         })
-        .catch((err) => {
-          console.error(err)
-          this.setState({ 
-            showError: true,
-            errorMessage: err.message
-          })
-        }) 
     }
   }
 
@@ -137,7 +130,7 @@ class Home extends Component {
             <FormControl
               type="text"
               value={this.state.orderName}
-              placeholder='Your Name'
+              placeholder='Item Name'
               onChange={this.handleChange}
               require={'true'}
               name='orderName'
